@@ -1,0 +1,13 @@
+.card {
+    -fx-background-color: #1a1a2e;
+    -fx-background-radius: 15;
+}
+
+.tab-active {
+    -fx-background-color: #374151;
+}
+
+.role-selected {
+    -fx-border-color: #10b981;
+    -fx-border-width: 2;
+}
