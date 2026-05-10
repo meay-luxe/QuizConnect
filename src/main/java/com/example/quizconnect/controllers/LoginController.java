@@ -102,7 +102,7 @@ public class LoginController {
             String confirm = confirmField.getText();
 
             if (!pass.equals(confirm)) {
-                System.out.println("❌ Passwords do not match!");
+                System.out.println(" Passwords do not match!");
                 return;
             }
 
