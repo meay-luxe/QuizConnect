@@ -1,13 +1,160 @@
+/* ==========================================
+   LOGIN PAGE — Glassmorphism Card
+   ========================================== */
+
+/* The main glassmorphic card */
 .card {
-    -fx-background-color: #1a1a2e;
-    -fx-background-radius: 15;
+    -fx-background-color: linear-gradient(
+        from 0% 0% to 100% 100%,
+        rgba(30, 27, 75, 0.6),
+        rgba(15, 23, 42, 0.7)
+    );
+    -fx-background-radius: 20;
+    -fx-border-color: linear-gradient(
+        to bottom right,
+        rgba(139, 92, 246, 0.4),
+        rgba(6, 182, 212, 0.2),
+        rgba(236, 72, 153, 0.3)
+    );
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 40, 0, 0, 15);
+    -fx-padding: 35 40 35 40;
 }
 
+.main-container {
+    -fx-max-width: 500;
+    -fx-pref-width: 500;
+}
+
+.card {
+    -fx-max-width: 460;
+    -fx-pref-width: 460;
+}
+
+/* ==========================================
+   LOGIN / REGISTER TAB TOGGLE (Top Pill Box)
+   ========================================== */
+.toggle-box {
+    -fx-background-color: rgba(15, 23, 42, 0.7);
+    -fx-background-radius: 12;
+    -fx-padding: 6;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-alignment: CENTER;
+}
+
+/* Base style for both tabs */
+.tab-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 10 30 10 30;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+}
+
+/* REMOVE NATIVE JAVAFX RADIO/CHECKBOX DOTS */
+.tab-btn .radio, .tab-btn .dot,
+.role-btn .radio, .role-btn .dot {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-shape: null;
+    -fx-padding: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+.tab-btn:hover {
+    -fx-text-fill: #cbd5e1;
+}
+
+/* Active tab — Elevated glass pill with subtle cyan/violet glow */
 .tab-active {
-    -fx-background-color: #374151;
+    -fx-background-color: linear-gradient(to right, rgba(139, 92, 246, 0.4), rgba(6, 182, 212, 0.4));
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
 }
 
+/* ==========================================
+   ROLE TOGGLE BUTTONS (Student / Teacher Cards)
+   ========================================== */
+/* The container holding the two role buttons */
+.roles-container {
+    -fx-spacing: 15;
+    -fx-alignment: CENTER;
+}
+
+/* Unselected base state — large outline cards */
+.role-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    /* Large padding to create spacious blocks like the inspiration */
+    -fx-padding: 20 40 20 40;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+
+.role-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(139, 92, 246, 0.4);
+    -fx-text-fill: #cbd5e1;
+}
+
+/* Selected state — glowing cyan border */
 .role-selected {
-    -fx-border-color: #10b981;
+    -fx-background-color: rgba(6, 182, 212, 0.1);
+    -fx-border-color: #06b6d4;
     -fx-border-width: 2;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(6, 182, 212, 0.4), 15, 0, 0, 0);
+}
+
+/* Remove default JavaFX focus rings that cause white backgrounds */
+.tab-btn:focused, .role-btn:focused {
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+}a
+/* ==========================================
+   FORM CONTAINER SPACING
+   ========================================== */
+.form-box {
+    -fx-padding: 10 0 10 0;
+    -fx-spacing: 14;
+}
+
+/* ==========================================
+   DIVIDER / HELPER TEXT
+   ========================================== */
+.divider-text {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 1.2;
+}
+
+/* ==========================================
+   ERROR / SUCCESS MESSAGES
+   ========================================== */
+.error-text {
+    -fx-text-fill: #f43f5e;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+}
+
+.success-text {
+    -fx-text-fill: #10b981;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
 }

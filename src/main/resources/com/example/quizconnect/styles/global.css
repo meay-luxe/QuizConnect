@@ -1,16 +1,138 @@
+/* ==========================================
+   GLOBAL STYLES — QuizConnect
+   Elegant Glassmorphism Edition
+   ========================================== */
+
+/* Root background — deep cosmic gradient */
+.root-pane {
+    -fx-background-color: linear-gradient(
+        from 0% 0% to 100% 100%,
+        #0a0e27 0%,
+        #151932 40%,
+        #1e1b4b 70%,
+        #0f0a1f 100%
+    );
+}
+
+/* Default font */
 .root {
-    -fx-font-family: "Segoe UI";
-    -fx-background-color: #0a0a1a;
+    -fx-font-family: "Segoe UI", "Inter", "Arial", sans-serif;
+    -fx-font-smoothing-type: lcd;
 }
 
-.submit-btn {
-    -fx-background-color: linear-gradient(to right, #f97316, #10b981);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
+/* ==========================================
+   APP HEADER (Title + Subtitle)
+   ========================================== */
+.app-title {
+    -fx-text-fill: linear-gradient(to right, #06b6d4, #8b5cf6, #ec4899);
+    -fx-font-size: 38px;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 20, 0, 0, 0);
 }
 
+.app-subtitle {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-letter-spacing: 0.5;
+}
+
+/* ==========================================
+   FORM LABELS
+   ========================================== */
+.field-label {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.8;
+}
+
+/* ==========================================
+   INPUT FIELDS — Glassmorphic style
+   ========================================== */
 .input-field {
-    -fx-background-color: #1f2937;
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-text-fill: #f1f5f9;
+    -fx-prompt-text-fill: #64748b;
+    -fx-padding: 12 16 12 16;
+    -fx-font-size: 13px;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
+}
+
+.input-field:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(139, 92, 246, 0.3);
+}
+
+.input-field:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: #8b5cf6;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 12, 0, 0, 0);
+}
+
+/* ==========================================
+   PRIMARY SUBMIT BUTTON — Gradient with glow
+   ========================================== */
+.submit-btn {
+    -fx-background-color: linear-gradient(to right, #06b6d4, #8b5cf6, #ec4899);
     -fx-text-fill: white;
-    -fx-prompt-text-fill: gray;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 10;
+    -fx-padding: 14 0 14 0;
+    -fx-cursor: hand;
+    -fx-letter-spacing: 0.5;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.5), 18, 0, 0, 4);
+}
+
+.submit-btn:hover {
+    -fx-background-color: linear-gradient(to right, #0891b2, #7c3aed, #db2777);
+    -fx-effect: dropshadow(gaussian, rgba(236, 72, 153, 0.6), 25, 0, 0, 6);
+    -fx-translate-y: -1;
+}
+
+.submit-btn:pressed {
+    -fx-translate-y: 0;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 10, 0, 0, 2);
+}
+
+/* ==========================================
+   SECONDARY BUTTON (optional helper)
+   ========================================== */
+.secondary-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 24 12 24;
+    -fx-cursor: hand;
+}
+
+.secondary-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* ==========================================
+   LINK / TEXT BUTTON
+   ========================================== */
+.link-text {
+    -fx-text-fill: #06b6d4;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-underline: false;
+}
+
+.link-text:hover {
+    -fx-text-fill: #8b5cf6;
+    -fx-underline: true;
 }
