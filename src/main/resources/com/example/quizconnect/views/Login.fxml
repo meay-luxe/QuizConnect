@@ -7,53 +7,159 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<StackPane
+        fx:id="rootPane"
+        prefHeight="660.0"
+        prefWidth="1213.0"
+        styleClass="root-pane"
+        xmlns="http://javafx.com/javafx/17"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.example.quizconnect.controllers.LoginController">
 
-<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1213.0" styleClass="root-pane" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.quizconnect.controllers.LoginController" >
-    <children>
-        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" styleClass="main-container" StackPane.alignment="TOP_CENTER">
+    <VBox
+            alignment="TOP_CENTER"
+            styleClass="main-container"
+            StackPane.alignment="TOP_CENTER">
+        <padding>
+            <Insets top="60.0" bottom="40.0"/>
+        </padding>
+
+        <!-- ══════ APP HEADER ══════ -->
+        <VBox alignment="CENTER" spacing="6.0" styleClass="header-box">
             <padding>
-                <Insets bottom="40.0" top="60.0" />
+                <Insets bottom="24.0"/>
             </padding>
-            <children>
-                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="8.0" styleClass="header-box">
-                    <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="app-title" text="QuizConnect" />
-                    </children>
-                </VBox>
-                <VBox fx:id="cardBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="450.0" spacing="15.0" styleClass="card">
-                    <padding>
-                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-                    </padding>
-                    <children>
-                        <HBox fx:id="toggleBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" styleClass="toggle-box">
-                            <children>
-                                <Button fx:id="loginTabBtn" mnemonicParsing="false" onAction="#handleShowLogin" styleClass="tab-btn tab-active" text="Login" />
-                                <Button fx:id="registerTabBtn" mnemonicParsing="false" onAction="#handleShowRegister" styleClass="tab-btn" text="Register" />
-                            </children>
-                        </HBox>
-                        <VBox fx:id="formBox" prefHeight="200.0" prefWidth="100.0" spacing="10.0" styleClass="form-box">
-                            <children>
-                                <Label styleClass="field-label" text="Username" />
-                                <TextField fx:id="usernameField" maxWidth="1.7976931348623157E308" promptText="Enter your username" styleClass="input-field" />
-                                <Label styleClass="field-label" text="Password" />
-                                <PasswordField fx:id="passwordField" maxWidth="1.7976931348623157E308" promptText="Enter your password" styleClass="input-field" />
-                                <Label styleClass="field-label" text="I am a..." />
-                                <HBox fx:id="roleBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                                    <children>
-                                        <ToggleButton fx:id="studentBtn" mnemonicParsing="false" selected="true" styleClass="role-btn role-selected" text="Student" />
-                                        <ToggleButton fx:id="teacherBtn" mnemonicParsing="false" styleClass="role-btn" text="Teacher" />
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
-                        <Button fx:id="sumitBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleSubmit" styleClass="submit-btn" text="Sign In" />
-                    </children>
-                </VBox>
-            </children>
+            <Text styleClass="app-title" text="QuizConnect"/>
+            <Text styleClass="app-subtitle" text="Learn Together, Live"/>
         </VBox>
-    </children>
+
+        <!-- ══════ GLASSMORPHIC CARD ══════ -->
+        <VBox
+                fx:id="cardBox"
+                alignment="TOP_CENTER"
+                styleClass="card"
+                spacing="0">
+
+            <!-- —— Tab Toggle —— -->
+            <HBox
+                    fx:id="toggleBox"
+                    alignment="CENTER"
+                    styleClass="toggle-box"
+                    maxWidth="Infinity">
+                <Button
+                        fx:id="loginTabBtn"
+                        text="Login"
+                        onAction="#handleShowLogin"
+                        styleClass="tab-btn,tab-active"
+                        maxWidth="Infinity"
+                        HBox.hgrow="ALWAYS"/>
+                <Button
+                        fx:id="registerTabBtn"
+                        text="Register"
+                        onAction="#handleShowRegister"
+                        styleClass="tab-btn"
+                        maxWidth="Infinity"
+                        HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Spacer between toggle and form -->
+            <Region prefHeight="20.0"/>
+
+            <!-- ══════ FORM AREA ══════ -->
+            <VBox fx:id="formBox" styleClass="form-box" spacing="14.0">
+
+                <!-- Username (always visible) -->
+                <VBox spacing="6.0">
+                    <Label styleClass="field-label" text="Username"/>
+                    <TextField
+                            fx:id="usernameField"
+                            promptText="Enter your username"
+                            maxWidth="Infinity"
+                            styleClass="input-field"/>
+                </VBox>
+
+                <!-- Email — register only, hidden by default -->
+                <VBox
+                        fx:id="emailGroup"
+                        spacing="6.0"
+                        visible="false"
+                        managed="false">
+                    <Label styleClass="field-label" text="Email"/>
+                    <TextField
+                            fx:id="emailField"
+                            promptText="Enter your email"
+                            maxWidth="Infinity"
+                            styleClass="input-field"/>
+                </VBox>
+
+                <!-- Password (always visible) -->
+                <VBox spacing="6.0">
+                    <Label styleClass="field-label" text="Password"/>
+                    <PasswordField
+                            fx:id="passwordField"
+                            promptText="Enter your password"
+                            maxWidth="Infinity"
+                            styleClass="input-field"/>
+                </VBox>
+
+                <!-- Confirm Password — register only, hidden by default -->
+                <VBox
+                        fx:id="confirmPasswordGroup"
+                        spacing="6.0"
+                        visible="false"
+                        managed="false">
+                    <Label styleClass="field-label" text="Confirm Password"/>
+                    <PasswordField
+                            fx:id="confirmPasswordField"
+                            promptText="Re-enter your password"
+                            maxWidth="Infinity"
+                            styleClass="input-field"/>
+                </VBox>
+
+                <!-- Role Selector (always visible) -->
+                <VBox spacing="8.0">
+                    <Label styleClass="field-label" text="I am a..."/>
+                    <HBox fx:id="roleBox" alignment="CENTER" spacing="12.0">
+                        <ToggleButton
+                                fx:id="studentBtn"
+                                text="Student"
+                                selected="true"
+                                styleClass="role-btn,role-selected"
+                                maxWidth="Infinity"
+                                HBox.hgrow="ALWAYS"/>
+                        <ToggleButton
+                                fx:id="teacherBtn"
+                                text="Teacher"
+                                styleClass="role-btn"
+                                maxWidth="Infinity"
+                                HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Error label — hidden until needed -->
+                <Label
+                        fx:id="errorLabel"
+                        styleClass="error-text"
+                        text=""
+                        wrapText="true"
+                        visible="false"
+                        managed="false"
+                        maxWidth="Infinity"/>
+
+                <!-- Submit Button -->
+                <Button
+                        fx:id="submitBtn"
+                        text="Sign In"
+                        onAction="#handleSubmit"
+                        maxWidth="Infinity"
+                        styleClass="submit-btn"/>
+
+            </VBox>
+        </VBox>
+    </VBox>
 </StackPane>

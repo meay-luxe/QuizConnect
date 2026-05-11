@@ -2,70 +2,89 @@ package com.example.quizconnect.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class LoginController {
 
-    @FXML private Button loginTabBtn, registerTabBtn, submitBtn;
-    @FXML private TextField usernameField;
+    // ——— Tab buttons ———
+    @FXML private Button loginTabBtn;
+    @FXML private Button registerTabBtn;
+
+    // ——— Always-visible fields ———
+    @FXML private TextField     usernameField;
     @FXML private PasswordField passwordField;
-    @FXML private ToggleButton studentBtn, teacherBtn;
-    @FXML private VBox formBox;
-    @FXML private HBox roleBox;
 
+    // ——— Register-only field groups ———
+    // These are VBox wrappers — we toggle managed+visible on the VBox
+    // so the label AND input both appear/disappear together with no gap
+    @FXML private VBox          emailGroup;
+    @FXML private TextField     emailField;
+    @FXML private VBox          confirmPasswordGroup;
+    @FXML private PasswordField confirmPasswordField;
+
+    // ——— Role toggles ———
+    @FXML private ToggleButton studentBtn;
+    @FXML private ToggleButton teacherBtn;
+
+    // ——— Feedback & submit ———
+    @FXML private Label  errorLabel;
+    @FXML private Button submitBtn;
+
+    // ——— State ———
     private boolean isLoginMode = true;
+    private ToggleGroup roleGroup;
 
-    // Extra fields for register mode (created dynamically)
-    private Label emailLabel;
-    private TextField emailField;
-    private Label confirmLabel;
-    private PasswordField confirmField;
+    // ─────────────────────────────────────────────────────
+    //  INITIALIZE
+    // ─────────────────────────────────────────────────────
 
     @FXML
     public void initialize() {
-        // Group the role toggle buttons so only one can be selected at a time
-        ToggleGroup roleGroup = new ToggleGroup();
+        setupRoleToggleGroup();
+    }
+
+    private void setupRoleToggleGroup() {
+        roleGroup = new ToggleGroup();
         studentBtn.setToggleGroup(roleGroup);
         teacherBtn.setToggleGroup(roleGroup);
 
-        // Update visual "selected" style when toggled
-        roleGroup.selectedToggleProperty().addListener((obs, oldV, newV) -> {
-            studentBtn.getStyleClass().remove("role-selected");
-            teacherBtn.getStyleClass().remove("role-selected");
-            if (newV != null) {
-                ((ToggleButton) newV).getStyleClass().add("role-selected");
+        // ── Enforce: one must always be selected ──
+        roleGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) {
+                // User clicked the already-selected button → reselect it
+                oldVal.setSelected(true);
+                return;
             }
+            refreshRoleStyles();
         });
 
-        // Pre-create the register-only fields (added/removed when toggling)
-        emailLabel = new Label("Email");
-        emailLabel.getStyleClass().add("field-label");
-
-        emailField = new TextField();
-        emailField.setPromptText("Enter your email");
-        emailField.getStyleClass().add("input-field");
-
-        confirmLabel = new Label("Confirm Password");
-        confirmLabel.getStyleClass().add("field-label");
-
-        confirmField = new PasswordField();
-        confirmField.setPromptText("Confirm your password");
-        confirmField.getStyleClass().add("input-field");
+        // Set initial visual state
+        refreshRoleStyles();
     }
+
+    // ─────────────────────────────────────────────────────
+    //  TAB SWITCHING
+    // ─────────────────────────────────────────────────────
 
     @FXML
     private void handleShowLogin() {
         if (isLoginMode) return;
         isLoginMode = true;
 
+        // ── Swap tab styles ──
         loginTabBtn.getStyleClass().add("tab-active");
         registerTabBtn.getStyleClass().remove("tab-active");
 
+        // ── Hide register-only groups ──
+        setVisible(emailGroup,           false);
+        setVisible(confirmPasswordGroup, false);
+
+        // ── Update button text ──
         submitBtn.setText("Sign In");
 
-        // Remove register-only fields
-        formBox.getChildren().removeAll(emailLabel, emailField, confirmLabel, confirmField);
+        // ── Reset state ──
+        clearFields();
+        hideError();
     }
 
     @FXML
@@ -73,42 +92,169 @@ public class LoginController {
         if (!isLoginMode) return;
         isLoginMode = false;
 
+        // ── Swap tab styles ──
         registerTabBtn.getStyleClass().add("tab-active");
         loginTabBtn.getStyleClass().remove("tab-active");
 
+        // ── Show register-only groups ──
+        setVisible(emailGroup,           true);
+        setVisible(confirmPasswordGroup, true);
+
+        // ── Update button text ──
         submitBtn.setText("Create Account");
 
-        // Insert Email fields after Username field (index 2)
-        formBox.getChildren().add(2, emailLabel);
-        formBox.getChildren().add(3, emailField);
-
-        // Insert Confirm Password fields after Password field
-        formBox.getChildren().add(8, confirmLabel);
-        formBox.getChildren().add(9, confirmField);
+        // ── Reset state ──
+        clearFields();
+        hideError();
     }
+
+    // ─────────────────────────────────────────────────────
+    //  SUBMIT
+    // ─────────────────────────────────────────────────────
 
     @FXML
     private void handleSubmit() {
-        String user = usernameField.getText();
-        String pass = passwordField.getText();
-        String role = studentBtn.isSelected() ? "Student" : "Teacher";
+        hideError();
 
         if (isLoginMode) {
-            System.out.println("LOGIN → user: " + user + " | role: " + role);
-            // TODO: validate then navigate
-            // SceneManager.switchTo("/views/Dashboard.fxml", "/styles/dashboard.css", "QuizConnect — Dashboard");
+            handleLogin();
         } else {
-            String email = emailField.getText();
-            String confirm = confirmField.getText();
-
-            if (!pass.equals(confirm)) {
-                System.out.println(" Passwords do not match!");
-                return;
-            }
-
-            System.out.println("REGISTER → user: " + user +
-                    " | email: " + email + " | role: " + role);
-            // TODO: save to DB, then navigate
+            handleRegister();
         }
+    }
+
+    private void handleLogin() {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
+        String role     = getSelectedRole();
+
+        // ── Validation ──
+        if (username.isEmpty()) {
+            showError("Username cannot be empty.");
+            usernameField.requestFocus();
+            return;
+        }
+        if (password.isEmpty()) {
+            showError("Password cannot be empty.");
+            passwordField.requestFocus();
+            return;
+        }
+
+        // ── TODO Week 1: Wire to server ──
+        // String json = JsonUtil.buildLoginRequest(username, password, role);
+        // ClientConnection.getInstance().send(json);
+        System.out.println("LOGIN → user:" + username + " | role:" + role);
+    }
+
+    private void handleRegister() {
+        String username = usernameField.getText().trim();
+        String email    = emailField.getText().trim();
+        String password = passwordField.getText();
+        String confirm  = confirmPasswordField.getText();
+        String role     = getSelectedRole();
+
+        // ── Validation — check each field in order ──
+        if (username.isEmpty()) {
+            showError("Username cannot be empty.");
+            usernameField.requestFocus();
+            return;
+        }
+        if (username.length() < 3) {
+            showError("Username must be at least 3 characters.");
+            usernameField.requestFocus();
+            return;
+        }
+        if (email.isEmpty()) {
+            showError("Email cannot be empty.");
+            emailField.requestFocus();
+            return;
+        }
+        if (!email.contains("@") || !email.contains(".")) {
+            showError("Please enter a valid email address.");
+            emailField.requestFocus();
+            return;
+        }
+        if (password.isEmpty()) {
+            showError("Password cannot be empty.");
+            passwordField.requestFocus();
+            return;
+        }
+        if (password.length() < 6) {
+            showError("Password must be at least 6 characters.");
+            passwordField.requestFocus();
+            return;
+        }
+        if (!password.equals(confirm)) {
+            showError("Passwords do not match.");
+            confirmPasswordField.clear();
+            confirmPasswordField.requestFocus();
+            return;
+        }
+
+        // ── TODO Week 1: Wire to server ──
+        // String json = JsonUtil.buildRegisterRequest(username, email, password, role);
+        // ClientConnection.getInstance().send(json);
+        System.out.println("REGISTER → user:" + username
+                + " | email:" + email + " | role:" + role);
+    }
+
+    // ─────────────────────────────────────────────────────
+    //  HELPERS
+    // ─────────────────────────────────────────────────────
+
+    /**
+     * Refreshes the CSS classes on role buttons
+     * to match which one is currently selected.
+     */
+    private void refreshRoleStyles() {
+        if (studentBtn.isSelected()) {
+            addStyle(studentBtn, "role-selected");
+            removeStyle(teacherBtn, "role-selected");
+        } else {
+            addStyle(teacherBtn, "role-selected");
+            removeStyle(studentBtn, "role-selected");
+        }
+    }
+
+    /**
+     * Toggles visibility AND layout space together.
+     * visible=false alone leaves a blank gap.
+     * managed=false removes the node from layout flow completely.
+     */
+    private void setVisible(javafx.scene.Node node, boolean show) {
+        node.setVisible(show);
+        node.setManaged(show);
+    }
+
+    private void showError(String message) {
+        errorLabel.setText(message);
+        setVisible(errorLabel, true);
+    }
+
+    private void hideError() {
+        errorLabel.setText("");
+        setVisible(errorLabel, false);
+    }
+
+    private void clearFields() {
+        usernameField.clear();
+        emailField.clear();
+        passwordField.clear();
+        confirmPasswordField.clear();
+    }
+
+    private String getSelectedRole() {
+        return studentBtn.isSelected() ? "STUDENT" : "TEACHER";
+    }
+
+    // ── CSS class helpers (prevent duplicate class names) ──
+    private void addStyle(javafx.scene.Node node, String style) {
+        if (!node.getStyleClass().contains(style)) {
+            node.getStyleClass().add(style);
+        }
+    }
+
+    private void removeStyle(javafx.scene.Node node, String style) {
+        node.getStyleClass().remove(style);
     }
 }
