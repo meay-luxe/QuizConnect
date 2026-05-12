@@ -258,3 +258,4 @@ public class LoginController {
         node.getStyleClass().remove(style);
     }
 }
+
