@@ -1,6 +1,7 @@
 module com.example.quizconnect {
     requires javafx.controls;
     requires javafx.fxml;
+    requires com.google.gson;
 
     opens com.example.quizconnect to javafx.fxml;
     opens com.example.quizconnect.controllers to javafx.fxml;
